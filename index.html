@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>BlockVault | Crypto Fraud Investigation</title>
+
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- =====================================================
+     WEB3 ENTRY PAGE
+===================================================== -->
+
+<div id="authPage" class="auth-page">
+
+    <div class="auth-card web3-auth-card">
+
+        <div class="logo auth-logo">
+            <span class="logo-icon">⬡</span>
+
+            <span>
+                Block<span>Vault</span>
+            </span>
+        </div>
+
+        <p class="auth-subtitle">
+            Blockchain Intelligence & Fraud Detection
+        </p>
+
+
+        <div class="web3-welcome">
+
+            <span class="page-label">
+                SECURE ACCESS
+            </span>
+
+            <h1>
+                Welcome to
+                <span>BlockVault</span>
+            </h1>
+
+            <p>
+                Connect your account or blockchain wallet
+                to begin a crypto fraud investigation.
+            </p>
+
+        </div>
+
+
+        <!-- GOOGLE LOGIN -->
+
+        <button
+            type="button"
+            class="web3-login-btn google-btn"
+            onclick="continueWithGoogle()">
+
+            <span class="login-icon google-icon">
+                G
+            </span>
+
+            <span>
+                Continue with Google
+            </span>
+
+            <span class="button-arrow">
+                →
+            </span>
+
+        </button>
+
+
+        <!-- METAMASK -->
+
+        <button
+            type="button"
+            class="web3-login-btn wallet-btn"
+            onclick="connectWallet()">
+
+            <span class="login-icon wallet-icon">
+                🦊
+            </span>
+
+            <span id="walletButtonText">
+                Continue with Wallet
+            </span>
+
+            <span class="button-arrow">
+                →
+            </span>
+
+        </button>
+
+
+        <div class="auth-divider">
+
+            <span>SECURE WEB3 ACCESS</span>
+
+        </div>
+
+
+        <div class="web3-security">
+
+            <div class="security-item">
+
+                <span>✓</span>
+
+                <div>
+                    <strong>
+                        Non-custodial
+                    </strong>
+
+                    <small>
+                        Your wallet stays under your control.
+                    </small>
+                </div>
+
+            </div>
+
+
+            <div class="security-item">
+
+                <span>✓</span>
+
+                <div>
+                    <strong>
+                        Blockchain verified
+                    </strong>
+
+                    <small>
+                        Investigation data is linked to on-chain evidence.
+                    </small>
+                </div>
+
+            </div>
+
+
+            <div class="security-item">
+
+                <span>✓</span>
+
+                <div>
+                    <strong>
+                        Investigation ready
+                    </strong>
+
+                    <small>
+                        Generate structured evidence reports.
+                    </small>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <p class="demo-note">
+
+            <span>●</span>
+
+            MVP Demo Mode — Google and wallet authentication
+            can be connected to the backend later.
+
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     MAIN APPLICATION
+===================================================== -->
+
+<div id="appPage" class="hidden">
+
+
+    <!-- =================================================
+         NAVBAR
+    ================================================= -->
+
+    <nav class="navbar">
+
+        <div class="logo">
+
+            <span class="logo-icon">
+                ⬡
+            </span>
+
+            <span>
+                Block<span>Vault</span>
+            </span>
+
+        </div>
+
+
+        <div class="nav-links">
+
+            <button
+                onclick="goHome()"
+                class="nav-btn active">
+
+                Home
+
+            </button>
+
+
+            <button
+                onclick="openDashboard()"
+                class="nav-btn">
+
+                Dashboard
+
+            </button>
+
+
+            <button
+                onclick="openReports()"
+                class="nav-btn">
+
+                Reports
+
+            </button>
+
+        </div>
+
+
+        <div class="user-area">
+
+            <div
+                class="user-avatar"
+                id="userAvatar">
+
+                W
+
+            </div>
+
+
+            <div class="connected-wallet-info">
+
+                <span id="userName">
+                    Wallet User
+                </span>
+
+                <small id="connectedWallet">
+                    Not connected
+                </small>
+
+            </div>
+
+
+            <button
+                onclick="logout()"
+                class="logout-btn">
+
+                Disconnect
+
+            </button>
+
+        </div>
+
+    </nav>
+
+
+    <!-- =================================================
+         HOME
+    ================================================= -->
+
+    <main id="homeSection">
+
+
+        <section class="hero">
+
+
+            <div class="hero-content">
+
+
+                <div class="badge">
+
+                    ● BLOCKCHAIN FORENSICS PLATFORM
+
+                </div>
+
+
+                <h1>
+
+                    Crypto Fraud
+                    <span>Detection</span>
+
+                </h1>
+
+
+                <p>
+
+                    Trace cryptocurrency transactions, identify
+                    suspicious wallet relationships, detect exchange
+                    exposure and generate investigation-ready evidence.
+
+                </p>
+
+
+                <!-- WALLET INPUT -->
+
+                <div class="wallet-input-area">
+
+
+                    <div class="input-label">
+
+                        Enter Suspect Wallet Address
+
+                    </div>
+
+
+                    <div class="wallet-input-row">
+
+
+                        <input
+                            type="text"
+                            id="walletInput"
+                            placeholder="0x742d35Cc6634C0532925a3b844Bc454e4438f44e">
+
+
+                        <button
+                            onclick="analyzeWallet()"
+                            class="analyze-btn">
+
+                            Analyze Wallet
+
+                            <span>
+                                →
+                            </span>
+
+                        </button>
+
+
+                    </div>
+
+
+                    <small>
+
+                        Ethereum network supported in MVP
+
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <!-- HERO VISUAL -->
+
+            <div class="hero-visual">
+
+
+                <div class="orb"></div>
+
+
+                <div class="floating-card card-one">
+
+                    <span>
+                        Risk Score
+                    </span>
+
+                    <strong>
+                        87/100
+                    </strong>
+
+                </div>
+
+
+                <div class="floating-card card-two">
+
+                    <span>
+                        Transactions
+                    </span>
+
+                    <strong>
+                        128
+                    </strong>
+
+                </div>
+
+
+                <div class="network-circle">
+
+
+                    <div class="network-node center">
+                        W
+                    </div>
+
+
+                    <div class="network-node node-a">
+                        A
+                    </div>
+
+
+                    <div class="network-node node-b">
+                        B
+                    </div>
+
+
+                    <div class="network-node node-c">
+                        C
+                    </div>
+
+
+                    <div class="network-line line-a"></div>
+
+                    <div class="network-line line-b"></div>
+
+                    <div class="network-line line-c"></div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- FEATURES -->
+
+        <section class="features-section">
+
+
+            <div class="section-heading">
+
+                <span>
+                    WHY BLOCKVAULT
+                </span>
+
+                <h2>
+                    Investigate. Trace. Detect.
+                </h2>
+
+            </div>
+
+
+            <div class="feature-grid">
+
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+                        ◈
+                    </div>
+
+                    <h3>
+                        Blockchain Analysis
+                    </h3>
+
+                    <p>
+                        Trace transactions and follow cryptocurrency
+                        movement across multiple wallet hops.
+                    </p>
+
+                </div>
+
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+                        ⚠
+                    </div>
+
+                    <h3>
+                        Risk Detection
+                    </h3>
+
+                    <p>
+                        Analyze individual transactions using
+                        behavioral, temporal and transaction-level
+                        risk indicators.
+                    </p>
+
+                </div>
+
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+                        ⇄
+                    </div>
+
+                    <h3>
+                        Exchange Tracking
+                    </h3>
+
+                    <p>
+                        Detect interactions with exchanges and
+                        cryptocurrency service providers.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =================================================
+         DASHBOARD
+    ================================================= -->
+
+    <main
+        id="dashboardSection"
+        class="dashboard-section hidden">
+
+
+        <!-- DASHBOARD HEADER -->
+
+        <div class="dashboard-header">
+
+
+            <div>
+
+                <span class="page-label">
+                    INVESTIGATION DASHBOARD
+                </span>
+
+                <h1>
+                    Case Investigation
+                </h1>
+
+                <p>
+                    Complete wallet activity and transaction-level
+                    blockchain intelligence.
+                </p>
+
+            </div>
+
+
+            <button
+                onclick="analyzeWallet()"
+                class="primary-btn">
+
+                Analyze Wallet Again
+
+            </button>
+
+        </div>
+
+
+        <!-- CASE INFORMATION -->
+
+        <section class="case-card">
+
+
+            <div>
+
+                <span>
+                    CASE ID
+                </span>
+
+                <strong id="caseId">
+                    BV-000001
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    STATUS
+                </span>
+
+                <strong class="status-active">
+                    ● ANALYSIS COMPLETE
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    NETWORK
+                </span>
+
+                <strong>
+                    Ethereum
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    INVESTIGATOR
+                </span>
+
+                <strong id="caseInvestigator">
+                    Wallet User
+                </strong>
+
+            </div>
+
+        </section>
+
+
+        <!-- STATISTICS -->
+
+        <section class="stats-grid">
+
+
+            <div class="stat-card risk-stat">
+
+                <span class="stat-title">
+                    WALLET RISK SCORE
+                </span>
+
+
+                <div class="risk-score">
+
+                    <strong id="riskScore">
+                        87
+                    </strong>
+
+                    <span>
+                        /100
+                    </span>
+
+                </div>
+
+
+                <div class="risk-meter">
+
+                    <div id="riskBar"></div>
+
+                </div>
+
+
+                <span
+                    class="risk-label"
+                    id="riskLabel">
+
+                    HIGH RISK
+
+                </span>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <span class="stat-title">
+                    ALL TRANSACTIONS
+                </span>
+
+                <strong id="transactionCount">
+                    0
+                </strong>
+
+                <p>
+                    Transactions analyzed
+                </p>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <span class="stat-title">
+                    LINKED WALLETS
+                </span>
+
+                <strong id="walletHops">
+                    0
+                </strong>
+
+                <p>
+                    Connected wallet relationships
+                </p>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <span class="stat-title">
+                    TRACEABLE VALUE
+                </span>
+
+                <strong id="traceableValue">
+                    0 ETH
+                </strong>
+
+                <p>
+                    Identified fund movement
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             REPORTED WALLET
+        ================================================= -->
+
+        <section class="panel">
+
+
+            <div class="panel-header">
+
+
+                <div>
+
+                    <span class="page-label">
+                        REPORTED WALLET
+                    </span>
+
+                    <h2>
+                        Wallet Profile
+                    </h2>
+
+                </div>
+
+
+                <span class="network-tag">
+                    Ethereum
+                </span>
+
+            </div>
+
+
+            <div class="wallet-display">
+
+
+                <span id="reportedWallet">
+                    -
+                </span>
+
+
+                <button
+                    onclick="copyWallet()"
+                    class="copy-btn">
+
+                    Copy
+
+                </button>
+
+            </div>
+
+
+            <div
+                id="walletProfile"
+                class="wallet-profile-grid">
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             WALLET RISK
+        ================================================= -->
+
+        <section class="panel">
+
+
+            <div class="panel-header">
+
+
+                <div>
+
+                    <span class="page-label">
+                        WALLET RISK ANALYSIS
+                    </span>
+
+                    <h2>
+                        Overall Wallet Activity
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="riskFactors"
+                class="risk-factors">
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             FUND FLOW GRAPH
+        ================================================= -->
+
+        <section class="panel">
+
+
+            <div class="panel-header">
+
+
+                <div>
+
+                    <span class="page-label">
+                        BLOCKCHAIN GRAPH
+                    </span>
+
+                    <h2>
+                        Fund Flow Relationship Map
+                    </h2>
+
+                </div>
+
+
+                <span class="network-tag">
+                    Wallet relationships
+                </span>
+
+            </div>
+
+
+            <div
+                id="graph"
+                class="graph-area">
+
+
+                <div class="graph-grid"></div>
+
+
+                <div class="graph-node graph-center">
+
+                    <span>
+                        W
+                    </span>
+
+                    <small>
+                        Reported Wallet
+                    </small>
+
+                </div>
+
+
+                <div class="graph-node graph-left">
+
+                    <span>
+                        A
+                    </span>
+
+                    <small>
+                        Linked Wallet
+                    </small>
+
+                </div>
+
+
+                <div class="graph-node graph-right">
+
+                    <span>
+                        B
+                    </span>
+
+                    <small>
+                        Linked Wallet
+                    </small>
+
+                </div>
+
+
+                <div class="graph-node graph-top">
+
+                    <span>
+                        E
+                    </span>
+
+                    <small>
+                        Exchange
+                    </small>
+
+                </div>
+
+
+                <div class="graph-node graph-bottom">
+
+                    <span>
+                        C
+                    </span>
+
+                    <small>
+                        Linked Wallet
+                    </small>
+
+                </div>
+
+
+                <div class="graph-edge edge-1"></div>
+
+                <div class="graph-edge edge-2"></div>
+
+                <div class="graph-edge edge-3"></div>
+
+                <div class="graph-edge edge-4"></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             ALL TRANSACTIONS
+        ================================================= -->
+
+        <section class="panel">
+
+
+            <div class="panel-header">
+
+
+                <div>
+
+                    <span class="page-label">
+                        TRANSACTION EVIDENCE
+                    </span>
+
+                    <h2>
+                        All Wallet Transactions
+                    </h2>
+
+                    <p class="panel-subtitle">
+
+                        Every collected transaction can be
+                        individually analyzed for suspicious activity.
+
+                    </p>
+
+                </div>
+
+
+                <span
+                    id="transactionBadge"
+                    class="count-badge">
+
+                    0
+
+                </span>
+
+            </div>
+
+
+            <div class="transaction-summary">
+
+
+                <div>
+
+                    <span>
+                        TOTAL
+                    </span>
+
+                    <strong id="totalTransactions">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        SUSPICIOUS
+                    </span>
+
+                    <strong
+                        id="suspiciousTransactions"
+                        class="danger-text">
+
+                        0
+
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        NOT SUSPICIOUS
+                    </span>
+
+                    <strong
+                        id="normalTransactions"
+                        class="success-text">
+
+                        0
+
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+
+                <table>
+
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                TX HASH
+                            </th>
+
+                            <th>
+                                FROM
+                            </th>
+
+                            <th>
+                                TO
+                            </th>
+
+                            <th>
+                                VALUE
+                            </th>
+
+                            <th>
+                                TIME
+                            </th>
+
+                            <th>
+                                STATUS
+                            </th>
+
+                            <th>
+                                RISK
+                            </th>
+
+                            <th>
+                                ACTION
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="transactionTable">
+
+                    </tbody>
+
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             LINKED WALLETS + EXCHANGE
+        ================================================= -->
+
+        <section class="two-column">
+
+
+            <!-- LINKED WALLETS -->
+
+            <div class="panel">
+
+
+                <div class="panel-header">
+
+
+                    <div>
+
+                        <span class="page-label">
+                            COUNTERPARTIES
+                        </span>
+
+                        <h2>
+                            Linked Wallets
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div id="linkedWallets">
+
+                </div>
+
+            </div>
+
+
+            <!-- EXCHANGE -->
+
+            <div class="panel">
+
+
+                <div class="panel-header">
+
+
+                    <div>
+
+                        <span class="page-label">
+                            VASP / EXCHANGE
+                        </span>
+
+                        <h2>
+                            Exchange Detection
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div id="exchangeInfo">
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             TIMELINE
+        ================================================= -->
+
+        <section class="panel">
+
+
+            <div class="panel-header">
+
+
+                <div>
+
+                    <span class="page-label">
+                        TEMPORAL ANALYSIS
+                    </span>
+
+                    <h2>
+                        Wallet Activity Timeline
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="timeline"
+                class="timeline">
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             REPORT
+        ================================================= -->
+
+        <section class="report-card">
+
+
+            <div>
+
+                <span class="page-label">
+                    INVESTIGATION REPORT
+                </span>
+
+                <h2>
+                    Generate Evidence Report
+                </h2>
+
+                <p>
+                    Export the complete wallet investigation,
+                    transaction analysis and blockchain evidence.
+                </p>
+
+            </div>
+
+
+            <div class="report-buttons">
+
+
+                <button
+                    onclick="generateJSONReport()"
+                    class="secondary-btn">
+
+                    Export JSON
+
+                </button>
+
+
+                <button
+                    onclick="generatePDFReport()"
+                    class="primary-btn">
+
+                    Save / Print PDF
+
+                </button>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =================================================
+         WALLET / TRANSACTION ANALYSIS OVERLAY
+    ================================================= -->
+
+    <div
+        id="analysisOverlay"
+        class="overlay hidden">
+
+
+        <div class="analysis-box">
+
+
+            <div class="loader"></div>
+
+
+            <h2>
+                Analyzing Blockchain
+            </h2>
+
+
+            <p id="analysisStatus">
+
+                Connecting to blockchain gateway...
+
+            </p>
+
+
+            <div class="analysis-steps">
+
+
+                <div id="step1">
+
+                    <span>○</span>
+
+                    Collecting all transactions
+
+                </div>
+
+
+                <div id="step2">
+
+                    <span>○</span>
+
+                    Profiling wallet relationships
+
+                </div>
+
+
+                <div id="step3">
+
+                    <span>○</span>
+
+                    Detecting suspicious patterns
+
+                </div>
+
+
+                <div id="step4">
+
+                    <span>○</span>
+
+                    Calculating wallet risk
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         TRANSACTION ANALYSIS MODAL
+    ================================================= -->
+
+    <div
+        id="transactionAnalysisModal"
+        class="modal hidden">
+
+
+        <div class="modal-box transaction-analysis-box">
+
+
+            <button
+                class="modal-close"
+                onclick="closeTransactionAnalysis()">
+
+                ×
+
+            </button>
+
+
+            <span class="page-label">
+                TRANSACTION ANALYSIS
+            </span>
+
+
+            <h2>
+                Individual Risk Assessment
+            </h2>
+
+
+            <div
+                id="transactionRiskResult"
+                class="transaction-risk-result">
+
+            </div>
+
+
+            <div
+                id="transactionEvidence"
+                class="transaction-evidence">
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         TRANSACTION DETAILS MODAL
+    ================================================= -->
+
+    <div
+        id="transactionModal"
+        class="modal hidden">
+
+
+        <div class="modal-box">
+
+
+            <button
+                class="modal-close"
+                onclick="closeTransactionModal()">
+
+                ×
+
+            </button>
+
+
+            <span class="page-label">
+                BLOCKCHAIN EVIDENCE
+            </span>
+
+
+            <h2>
+                Transaction Details
+            </h2>
+
+
+            <div
+                id="transactionDetails">
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         FOOTER
+    ================================================= -->
+
+    <footer>
+
+
+        <div class="logo">
+
+            <span class="logo-icon">
+                ⬡
+            </span>
+
+            BlockVault
+
+        </div>
+
+
+        <p>
+            Blockchain Intelligence for Crypto Fraud Investigation
+        </p>
+
+
+        <span>
+            SIH 2026 • MVP Prototype
+        </span>
+
+    </footer>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>

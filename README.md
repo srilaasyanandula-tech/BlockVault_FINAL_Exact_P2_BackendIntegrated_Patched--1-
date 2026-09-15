@@ -17,3 +17,4 @@ the UI does not silently classify the wallet as safe.
 
 The Google button remains the supplied P2 MVP demo login; it is not real Google OAuth.
 Hello ;)
+Nice to meet you

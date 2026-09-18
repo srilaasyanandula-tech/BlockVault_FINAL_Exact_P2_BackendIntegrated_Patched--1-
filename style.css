@@ -1227,7 +1227,7 @@ button {
 }
 
 .risk-meter div {
-    width: 87%;
+    width: 0;
 
     height: 100%;
 
@@ -1410,6 +1410,66 @@ button {
     font-size: 11px;
 }
 
+.evidence-overview-grid {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 10px;
+}
+
+.evidence-overview-item {
+    min-height: 74px;
+
+    padding: 13px;
+
+    border-radius: 10px;
+
+    background: rgba(255, 255, 255, 0.025);
+
+    border: 1px solid rgba(148, 163, 184, 0.06);
+}
+
+.evidence-overview-item span {
+    display: block;
+
+    color: #64748b;
+
+    font-size: 9px;
+
+    margin-bottom: 6px;
+}
+
+.evidence-overview-item strong {
+    display: block;
+
+    color: #cbd5e1;
+
+    font-size: 11px;
+
+    overflow-wrap: anywhere;
+}
+
+.evidence-overview-item small {
+    display: block;
+
+    margin-top: 4px;
+
+    color: var(--muted);
+
+    font-family: monospace;
+
+    font-size: 9px;
+}
+
+.analysis-method {
+    margin-top: 14px;
+
+    color: var(--muted);
+
+    font-size: 10px;
+}
+
 
 /* =====================================================
    RISK FACTORS
@@ -1546,6 +1606,64 @@ button {
     color: var(--muted);
 
     font-size: 9px;
+}
+
+.graph-evidence-node {
+    cursor: pointer;
+
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.graph-evidence-node:hover {
+    transform: scale(1.08);
+}
+
+.graph-risk-high {
+    border-color: #ef4444;
+
+    color: #fca5a5;
+
+    box-shadow: 0 0 32px rgba(239, 68, 68, 0.22);
+}
+
+.graph-risk-low {
+    border-color: rgba(34, 211, 238, 0.55);
+}
+
+.graph-edge-dynamic {
+    width: 25%;
+}
+
+.graph-inspector {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px 18px;
+
+    margin-top: 12px;
+
+    padding: 12px 14px;
+
+    color: var(--muted);
+
+    font-size: 10px;
+
+    border: 1px solid rgba(148, 163, 184, 0.08);
+
+    border-radius: 9px;
+
+    background: rgba(255, 255, 255, 0.025);
+}
+
+.graph-inspector strong {
+    color: #bae6fd;
+
+    font-family: monospace;
+}
+
+.graph-inspector span {
+    color: var(--muted);
 }
 
 .graph-center {
@@ -1701,6 +1819,46 @@ button {
 
 .table-wrapper {
     overflow-x: auto;
+}
+
+.transaction-pagination {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 12px;
+
+    margin-top: 16px;
+}
+
+.pagination-btn {
+    padding: 8px 12px;
+
+    border: 1px solid rgba(34, 211, 238, 0.2);
+
+    border-radius: 7px;
+
+    color: #bae6fd;
+
+    background: rgba(34, 211, 238, 0.07);
+
+    font-size: 10px;
+
+    cursor: pointer;
+}
+
+.pagination-btn:disabled {
+    opacity: 0.4;
+
+    cursor: not-allowed;
+}
+
+.pagination-status {
+    color: #94a3b8;
+
+    font-size: 10px;
 }
 
 table {
@@ -1910,6 +2068,16 @@ tr:hover td {
     color: var(--muted);
 
     font-size: 10px;
+}
+
+.wallet-info small {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #64748b;
+
+    font-size: 9px;
 }
 
 .wallet-risk {
@@ -2281,6 +2449,88 @@ tr:hover td {
 
 .transaction-analysis-box {
     width: min(700px, 100%);
+}
+
+.transaction-analysis-loading {
+    padding: 28px 22px;
+
+    margin-bottom: 18px;
+
+    text-align: center;
+
+    border: 1px solid rgba(34, 211, 238, 0.14);
+
+    border-radius: 14px;
+
+    background: rgba(34, 211, 238, 0.035);
+}
+
+.transaction-analysis-spinner {
+    width: 28px;
+    height: 28px;
+
+    margin: 0 auto 14px;
+
+    border: 3px solid rgba(148, 163, 184, 0.2);
+
+    border-top-color: var(--cyan);
+
+    border-radius: 50%;
+
+    animation: transaction-spin 0.9s linear infinite;
+}
+
+.transaction-analysis-loading strong {
+    display: block;
+
+    color: #e0f2fe;
+
+    font-size: 13px;
+}
+
+.transaction-analysis-loading p {
+    margin: 7px 0 16px;
+
+    color: var(--muted);
+
+    font-size: 10px;
+}
+
+.transaction-progress {
+    height: 6px;
+
+    overflow: hidden;
+
+    border-radius: 10px;
+
+    background: #172033;
+}
+
+.transaction-progress-bar {
+    width: 42%;
+    height: 100%;
+
+    border-radius: inherit;
+
+    background: linear-gradient(90deg, var(--cyan), var(--blue));
+
+    animation: transaction-progress 1.4s ease-in-out infinite;
+}
+
+@keyframes transaction-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes transaction-progress {
+    0% {
+        transform: translateX(-120%);
+    }
+
+    100% {
+        transform: translateX(300%);
+    }
 }
 
 

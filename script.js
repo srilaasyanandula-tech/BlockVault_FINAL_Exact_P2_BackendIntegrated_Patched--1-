@@ -5,14 +5,11 @@
    FRONTEND VERSION
 
    Authentication:
-   - Google Demo Login
+    - Google demo login
    - MetaMask / Web3 Wallet
 
    Blockchain:
-   - Demo transaction data for MVP
-
-   Later:
-   Replace buildDemoResult() with FastAPI response.
+    - Live Flask API response
 ===================================================== */
 
 
@@ -26,13 +23,11 @@ let currentResult = null;
 
 let connectedWallet = null;
 
+let transactionPage = 1;
 
-/* =====================================================
-   DEMO WALLET
-===================================================== */
+let printAllTransactions = false;
 
-const DEMO_WALLET =
-    "0x742d35Cc6634C0532925a3b844Bc454e4438f44e";
+const TRANSACTIONS_PER_PAGE = 10;
 
 
 /* =====================================================
@@ -1508,8 +1503,22 @@ function renderDashboard(
         .textContent =
         data.traceableValue;
 
+    const evidenceStatus = document.getElementById(
+        "evidenceStatus"
+    );
+
+    if (evidenceStatus) {
+        evidenceStatus.textContent = data.evidenceStatus === "unavailable"
+            ? "Evidence unavailable"
+            : data.dataSource || "Evidence available";
+    }
+
 
     renderWalletProfile(
+        data
+    );
+
+    renderEvidenceOverview(
         data
     );
 
@@ -1518,6 +1527,8 @@ function renderDashboard(
         data.riskFactors
     );
 
+
+    transactionPage = 1;
 
     renderTransactions(
         data.transactions
@@ -1681,6 +1692,10 @@ function renderTransactions(
     transactions
 ) {
 
+    transactions = Array.isArray(transactions)
+        ? transactions
+        : [];
+
     const table =
         document.getElementById(
             "transactionTable"
@@ -1735,15 +1750,34 @@ function renderTransactions(
         normal;
 
 
-    /*
-        Render every transaction
-    */
+    const pageSize = printAllTransactions
+        ? Math.max(transactions.length, 1)
+        : TRANSACTIONS_PER_PAGE;
+
+    const totalPages = printAllTransactions
+        ? 1
+        : Math.max(
+            1,
+            Math.ceil(transactions.length / TRANSACTIONS_PER_PAGE)
+        );
+
+    transactionPage = Math.min(transactionPage, totalPages);
+
+    const pageStart =
+        (transactionPage - 1) * TRANSACTIONS_PER_PAGE;
+
+    const pageTransactions = transactions.slice(
+        pageStart,
+        pageStart + pageSize
+    );
 
     table.innerHTML =
 
-        transactions
+        pageTransactions
             .map(
-                (tx, index) => {
+                (tx, pageIndex) => {
+
+                    const index = pageStart + pageIndex;
 
                     const status =
                         tx.analyzed
@@ -1828,7 +1862,25 @@ function renderTransactions(
                             <td>
 
                                 ${escapeHTML(
+                                    tx.direction || "UNKNOWN"
+                                )}
+
+                            </td>
+
+
+                            <td>
+
+                                ${escapeHTML(
                                     tx.time
+                                )}
+
+                            </td>
+
+
+                            <td>
+
+                                ${escapeHTML(
+                                    tx.behavior || "No behavioral summary"
                                 )}
 
                             </td>
@@ -1874,7 +1926,7 @@ function renderTransactions(
                                             )
                                         ">
 
-                                        Analyze
+                                        Analysis
 
                                     </button>
 
@@ -1904,6 +1956,78 @@ function renderTransactions(
             )
             .join("");
 
+    renderTransactionPagination(
+        transactions.length,
+        totalPages
+    );
+
+}
+
+
+function renderTransactionPagination(
+    totalTransactions,
+    totalPages
+) {
+
+    const pagination = document.getElementById(
+        "transactionPagination"
+    );
+
+    if (!pagination) {
+        return;
+    }
+
+    pagination.classList.toggle(
+        "hidden",
+        printAllTransactions || totalTransactions <= TRANSACTIONS_PER_PAGE
+    );
+
+    if (printAllTransactions || totalTransactions <= TRANSACTIONS_PER_PAGE) {
+        return;
+    }
+
+    pagination.innerHTML = `
+        <button
+            class="pagination-btn"
+            type="button"
+            ${transactionPage === 1 ? "disabled" : ""}
+            onclick="changeTransactionPage(-1)">
+            Previous
+        </button>
+        <span class="pagination-status">
+            Page ${transactionPage} of ${totalPages}
+        </span>
+        <button
+            class="pagination-btn"
+            type="button"
+            ${transactionPage === totalPages ? "disabled" : ""}
+            onclick="changeTransactionPage(1)">
+            Next
+        </button>
+    `;
+}
+
+
+function changeTransactionPage(direction) {
+
+    if (!currentResult || !Array.isArray(currentResult.transactions)) {
+        return;
+    }
+
+    const totalPages = Math.max(
+        1,
+        Math.ceil(
+            currentResult.transactions.length /
+            TRANSACTIONS_PER_PAGE
+        )
+    );
+
+    transactionPage = Math.max(
+        1,
+        Math.min(transactionPage + direction, totalPages)
+    );
+
+    renderTransactions(currentResult.transactions);
 }
 
 
@@ -1919,6 +2043,17 @@ async function analyzeTransaction(index) {
     }
 
     const tx = currentResult.transactions[index];
+    const modal = document.getElementById("transactionAnalysisModal");
+    const loading = document.getElementById("transactionAnalysisLoading");
+    const loadingStatus = document.getElementById("transactionAnalysisStatus");
+    const resultContainer = document.getElementById("transactionRiskResult");
+    const evidence = document.getElementById("transactionEvidence");
+
+    modal.classList.remove("hidden");
+    loading.classList.remove("hidden");
+    resultContainer.classList.add("hidden");
+    evidence.classList.add("hidden");
+    loadingStatus.textContent = "Fetching counterparty evidence...";
 
     try {
         const response = await fetch("/api/analyze-transaction", {
@@ -1942,9 +2077,6 @@ async function analyzeTransaction(index) {
         const suspicious = tx.riskScore >= 60;
         const decision = suspicious ? "SUSPICIOUS" : "NOT SUSPICIOUS";
         const decisionClass = suspicious ? "suspicious" : "normal";
-
-        const resultContainer =
-            document.getElementById("transactionRiskResult");
 
         resultContainer.innerHTML = `
             <div class="tx-risk-header">
@@ -1984,8 +2116,6 @@ async function analyzeTransaction(index) {
             </div>
         `;
 
-        const evidence = document.getElementById("transactionEvidence");
-
         evidence.innerHTML = `
             <div class="evidence-heading">BLOCKCHAIN EVIDENCE</div>
             <div class="evidence-grid">
@@ -2024,14 +2154,16 @@ async function analyzeTransaction(index) {
             </div>
         `;
 
-        document
-            .getElementById("transactionAnalysisModal")
-            .classList.remove("hidden");
+        loadingStatus.textContent = "Analysis complete.";
+        loading.classList.add("hidden");
+        resultContainer.classList.remove("hidden");
+        evidence.classList.remove("hidden");
 
         renderTransactions(currentResult.transactions);
 
     } catch (error) {
         console.error("Transaction analysis error:", error);
+        modal.classList.add("hidden");
         alert("Transaction analysis failed.\n\n" + error.message);
     }
 }
@@ -2276,19 +2408,13 @@ function renderGraph(data) {
 
     const links = data.graphLinks || [];
     const center = data.wallet || "";
-
-    /*
-        Keep the existing P2 graph container and styling.
-        Only replace its demo nodes/edges with evidence-backed
-        relationships returned by the backend.
-    */
     graph.innerHTML = '<div class="graph-grid"></div>';
 
     const positions = [
-        ["graph-left", -1],
-        ["graph-right", 1],
-        ["graph-top", -1],
-        ["graph-bottom", 1]
+        ["18%", "44%"],
+        ["74%", "34%"],
+        ["44%", "10%"],
+        ["43%", "76%"]
     ];
 
     const maxNodes = Math.min(links.length, positions.length);
@@ -2296,22 +2422,41 @@ function renderGraph(data) {
     const centerNode = document.createElement("div");
     centerNode.className = "graph-node graph-center";
     centerNode.innerHTML =
-        `<span>W</span><small>Reported Wallet</small>`;
+        `<span>W</span><small>${escapeHTML(shortenAddress(center))}</small>`;
     graph.appendChild(centerNode);
 
     for (let i = 0; i < maxNodes; i++) {
         const item = links[i];
-        const [positionClass] = positions[i];
+        const [left, top] = positions[i];
 
         const node = document.createElement("div");
-        node.className = "graph-node " + positionClass;
+        node.className = "graph-node graph-evidence-node " +
+            (item.risk === "HIGH" ? "graph-risk-high" : "graph-risk-low");
+        node.style.left = left;
+        node.style.top = top;
+        node.title = `${item.address} | ${item.count} transactions | ${item.totalValueEth} ETH`;
         node.innerHTML =
             `<span>${escapeHTML(item.label || String.fromCharCode(65 + i))}</span>` +
-            `<small>${escapeHTML(item.type || "Linked Wallet")}</small>`;
+            `<small>${escapeHTML(shortenAddress(item.address))}</small>`;
+        node.addEventListener("click", () => {
+            const inspector = document.getElementById("graphInspector");
+            if (inspector) {
+                inspector.innerHTML = `
+                    <strong>${escapeHTML(item.address)}</strong>
+                    <span>${escapeHTML(item.type || "Linked Wallet")} | ${item.risk || "LOW"} risk</span>
+                    <span>${item.count || 0} transactions | ${Number(item.totalValueEth || 0).toFixed(6)} ETH</span>
+                    <span>${item.incomingCount || 0} inbound | ${item.outgoingCount || 0} outbound</span>
+                `;
+            }
+        });
         graph.appendChild(node);
 
         const edge = document.createElement("div");
-        edge.className = "graph-edge edge-" + (i + 1);
+        edge.className = "graph-edge graph-edge-dynamic";
+        edge.style.left = "50%";
+        edge.style.top = "50%";
+        edge.style.width = "25%";
+        edge.style.transform = `rotate(${i * 90 - 20}deg)`;
         graph.appendChild(edge);
     }
 
@@ -2357,6 +2502,11 @@ function renderLinkedWallets(
                                 wallet.type
                             )}
                         </span>
+
+                        <small>
+                            ${wallet.transactionCount || 0} tx |
+                            ${Number(wallet.totalValueEth || 0).toFixed(6)} ETH
+                        </small>
 
                     </div>
 
@@ -2562,19 +2712,38 @@ function generateJSONReport() {
 
 
     const report = {
-
-        platform:
-            "BlockVault",
-
-        version:
-            "MVP",
-
-        generatedAt:
-            new Date().toISOString(),
-
-        investigation:
-            currentResult
-
+        reportType: "BlockVault Wallet Investigation Report",
+        schemaVersion: "1.0",
+        platform: "BlockVault",
+        generatedAt: new Date().toISOString(),
+        case: {
+            caseId: currentResult.caseId,
+            wallet: currentResult.wallet,
+            network: "Ethereum",
+            investigator: currentUser?.name || "Wallet User",
+            dataSource: currentResult.dataSource,
+            evidenceStatus: currentResult.evidenceStatus,
+            evidenceMessage: currentResult.evidenceMessage
+        },
+        assessment: {
+            riskScore: currentResult.riskScore,
+            riskLabel: currentResult.riskLabel,
+            classification: currentResult.classification,
+            analysisMethod: currentResult.analysisMethod,
+            riskThresholds: currentResult.riskThresholds,
+            riskFactors: currentResult.riskFactors,
+            limitations: currentResult.limitations
+        },
+        evidence: {
+            transactionSummary: currentResult.transactionSummary,
+            counterpartySummary: currentResult.counterpartySummary,
+            graphAnalysis: currentResult.graphAnalysis,
+            linkedWallets: currentResult.linkedWallets,
+            timeline: currentResult.timeline,
+            transactions: currentResult.transactions
+        },
+        attribution: currentResult.exchange,
+        investigation: currentResult
     };
 
 
@@ -2655,12 +2824,20 @@ function generatePDFReport() {
     }
 
 
-    /*
-        Browser print dialog allows
-        user to choose:
+    printAllTransactions = true;
+    transactionPage = 1;
+    renderTransactions(currentResult.transactions);
 
-        Save as PDF
-    */
+    const restorePagination = () => {
+        printAllTransactions = false;
+        renderTransactions(currentResult.transactions);
+    };
+
+    window.addEventListener(
+        "afterprint",
+        restorePagination,
+        {once: true}
+    );
 
     window.print();
 
@@ -2788,5 +2965,66 @@ if (
 
         }
     );
+
+}
+
+
+function renderEvidenceOverview(
+    data
+) {
+
+    const summary = data.transactionSummary || {};
+    const transactionAnalysis = data.transactionAnalysis || {};
+    const largest = summary.largestTransaction;
+    const container = document.getElementById("evidenceOverview");
+    const method = document.getElementById("analysisMethod");
+
+    if (!container) {
+        return;
+    }
+
+    const largestValue = largest
+        ? `${Number(largest.valueEth || 0).toFixed(6)} ETH (${largest.direction})`
+        : "No transaction data";
+    const largestCounterparty = largest
+        ? shortenAddress(largest.counterparty)
+        : "-";
+
+    container.innerHTML = `
+        <div class="evidence-overview-item">
+            <span>DATA SOURCE</span>
+            <strong>${escapeHTML(data.dataSource || "Unknown")}</strong>
+        </div>
+        <div class="evidence-overview-item">
+            <span>BATCH ANALYSIS</span>
+            <strong>${transactionAnalysis.analyzedCount || 0} / ${summary.total || 0} analyzed</strong>
+            <small>${transactionAnalysis.pendingCount || 0} pending</small>
+        </div>
+        <div class="evidence-overview-item">
+            <span>INCOMING FLOW</span>
+            <strong>${summary.incomingCount || 0} tx / ${Number(summary.incomingValueEth || 0).toFixed(6)} ETH</strong>
+        </div>
+        <div class="evidence-overview-item">
+            <span>OUTGOING FLOW</span>
+            <strong>${summary.outgoingCount || 0} tx / ${Number(summary.outgoingValueEth || 0).toFixed(6)} ETH</strong>
+        </div>
+        <div class="evidence-overview-item">
+            <span>HIGH-RISK TRANSACTIONS</span>
+            <strong>${summary.highRiskCount || 0}</strong>
+        </div>
+        <div class="evidence-overview-item">
+            <span>AVERAGE VALUE</span>
+            <strong>${Number(summary.averageValueEth || 0).toFixed(6)} ETH</strong>
+        </div>
+        <div class="evidence-overview-item">
+            <span>LARGEST MOVEMENT</span>
+            <strong>${escapeHTML(largestValue)}</strong>
+            <small>${escapeHTML(largestCounterparty)}</small>
+        </div>
+    `;
+
+    if (method) {
+        method.textContent = data.analysisMethod || "Analysis method unavailable.";
+    }
 
 }

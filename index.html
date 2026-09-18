@@ -164,8 +164,7 @@
 
             <span>●</span>
 
-            MVP Demo Mode — Google and wallet authentication
-            can be connected to the backend later.
+            Google sign-in is demo authentication; wallet analysis uses live blockchain data.
 
         </p>
 
@@ -323,7 +322,7 @@
                         <input
                             type="text"
                             id="walletInput"
-                            placeholder="0x742d35Cc6634C0532925a3b844Bc454e4438f44e">
+                            placeholder="Enter an Ethereum wallet address">
 
 
                         <button
@@ -368,7 +367,7 @@
                     </span>
 
                     <strong>
-                        87/100
+                            --/100
                     </strong>
 
                 </div>
@@ -381,7 +380,7 @@
                     </span>
 
                     <strong>
-                        128
+                            --
                     </strong>
 
                 </div>
@@ -622,7 +621,7 @@
                 <div class="risk-score">
 
                     <strong id="riskScore">
-                        87
+                        --
                     </strong>
 
                     <span>
@@ -643,7 +642,7 @@
                     class="risk-label"
                     id="riskLabel">
 
-                    HIGH RISK
+                    AWAITING ANALYSIS
 
                 </span>
 
@@ -704,6 +703,39 @@
 
 
         <!-- =================================================
+             EVIDENCE OVERVIEW
+        ================================================= -->
+
+        <section class="panel">
+
+            <div class="panel-header">
+
+                <div>
+                    <span class="page-label">
+                        EVIDENCE OVERVIEW
+                    </span>
+
+                    <h2>
+                        Transaction Flow Summary
+                    </h2>
+                </div>
+
+                <span class="network-tag">
+                    Live analysis
+                </span>
+
+            </div>
+
+            <div id="evidenceOverview" class="evidence-overview-grid">
+            </div>
+
+            <p id="analysisMethod" class="analysis-method">
+            </p>
+
+        </section>
+
+
+        <!-- =================================================
              REPORTED WALLET
         ================================================= -->
 
@@ -728,6 +760,13 @@
 
                 <span class="network-tag">
                     Ethereum
+                </span>
+
+                <span
+                    id="evidenceStatus"
+                    class="network-tag"
+                    aria-live="polite">
+                    Evidence pending
                 </span>
 
             </div>
@@ -908,6 +947,13 @@
 
             </div>
 
+            <div
+                id="graphInspector"
+                class="graph-inspector"
+                aria-live="polite">
+                Select a wallet relationship to inspect its evidence.
+            </div>
+
         </section>
 
 
@@ -1032,7 +1078,15 @@
                             </th>
 
                             <th>
+                                DIRECTION
+                            </th>
+
+                            <th>
                                 TIME
+                            </th>
+
+                            <th>
+                                BEHAVIOR
                             </th>
 
                             <th>
@@ -1059,6 +1113,13 @@
 
                 </table>
 
+            </div>
+
+
+            <div
+                id="transactionPagination"
+                class="transaction-pagination hidden"
+                aria-label="Transaction table pagination">
             </div>
 
         </section>
@@ -1321,17 +1382,41 @@
                 Individual Risk Assessment
             </h2>
 
+            <div
+                id="transactionAnalysisLoading"
+                class="transaction-analysis-loading"
+                aria-live="polite">
+
+                <div class="transaction-analysis-spinner"></div>
+
+                <strong>
+                    Analyzing transaction evidence
+                </strong>
+
+                <p id="transactionAnalysisStatus">
+                    Fetching counterparty evidence...
+                </p>
+
+                <div
+                    class="transaction-progress"
+                    role="progressbar"
+                    aria-label="Transaction analysis in progress">
+                    <div class="transaction-progress-bar"></div>
+                </div>
+
+            </div>
+
 
             <div
                 id="transactionRiskResult"
-                class="transaction-risk-result">
+                class="transaction-risk-result hidden">
 
             </div>
 
 
             <div
                 id="transactionEvidence"
-                class="transaction-evidence">
+                class="transaction-evidence hidden">
 
             </div>
 
@@ -1403,10 +1488,6 @@
             Blockchain Intelligence for Crypto Fraud Investigation
         </p>
 
-
-        <span>
-            SIH 2026 • MVP Prototype
-        </span>
 
     </footer>
 

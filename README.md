@@ -15,4 +15,4 @@ The backend uses local Ganache when the wallet has local activity and otherwise
 uses Ethereum Mainnet Blockscout transaction data. If data cannot be retrieved,
 the UI does not silently classify the wallet as safe.
 
-The Google button remains the supplied P2 MVP demo login; it is not real Google OAuth.
+The Google button is demo authentication only and is not real Google OAuth. Wallet analysis uses the live Flask API and configured blockchain data sources.
